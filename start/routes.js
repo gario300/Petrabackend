@@ -24,7 +24,8 @@ Route.post('/makeop', 'ServerfunctionController.makeop')
 Route.group(() => {
     Route.post('/getallalerts', 'ServerfunctionController.getalertssend')
     Route.get('/onproccess/:id', 'ServerfunctionController.onproccess')
-    Route.get('getone/:id', 'ServerfunctionController.getonereport')
+    Route.get('/getone/:id', 'ServerfunctionController.getonereport')
+    Route.put('/respond', 'ServerfunctionController.responder')
 }).prefix('superuser').middleware('auth:jwt')
 
 Route.group(() => {

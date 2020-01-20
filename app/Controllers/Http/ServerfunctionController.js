@@ -66,7 +66,7 @@ class ServerfunctionController {
                 .with('alert')
                 .with('user')
                 .orderBy('created_at', 'DESC')
-                .paginate(data.page, 10)
+                .paginate(data.page, 6)
                 
                 return response.json({
                     status: 'sure',
@@ -194,6 +194,87 @@ class ServerfunctionController {
             })
         }
             
+    }
+    async responder({auth, request, response}){
+        const autentication = auth.current.user
+        const data = request.only(['reportid', 'supervisor_name', 'coments', 'image'])
+        
+        const op = await User.query()
+        .where('id', autentication.id)
+        .with('rank')
+        .firstOrFail()
+
+        const operador = await op.toJSON()
+
+        if(operador.rank !== null && operador.rank.rank_type == 'Operador'){
+            try{
+
+                let image = null
+                if(data.image !== null){
+                    const entry = data['image'];
+                    const resultado = await Cloudinary.v2.uploader.upload(entry);
+                    image = resultado.secure_url
+                }
+                const report = await Report.findBy('id', data.reportid)
+                report.status = 'Finalizado'
+                report.supervisor_name = data.supervisor_name
+                report.operador_name = autentication.name
+                report.image = image
+                await report.save()
+
+                const mytokens = await Expotoken.query()
+                .where('user_id', reportjson.user_id)
+                .fetch()
+                
+                const expotokens = await mytokens.toJSON()
+
+                if(expotokens !== null){
+                    let expo = new Expo();
+                    let messages = [];
+
+                    for(let expotoken of expotokens){
+
+                        messages.push({
+                            to: expotoken.expo_token,
+                            sound: 'default',
+                            title: 'Tu reporte ha sido contestadp',
+                            body: 'Tu reporte con id '+reportjson.id+' finalizó',
+                        })
+                        
+                    }
+
+                    let chunks = expo.chunkPushNotifications(messages)
+
+                    let tickets = []
+                    for(let chunk of chunks ){
+                        try {
+                          let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+                          console.log(ticketChunk);
+                          tickets.push(...ticketChunk);
+                        } catch (error) {
+                            return response.status(400).json({
+                                status : 'wrong',
+                                message: 'No se pudo enviar el reporte'
+                            })
+                        }
+
+                    }
+                }
+
+            } catch(error){
+                console.log(error)
+                return response.status(400).json({
+                    status:'wrong',
+                    message: 'UN error interno, intentalo más tarde'
+                })
+            }
+        } else {
+            return response.status(401).json({
+                status:'wrong',
+                message: 'No estás autorizado para ver esto'
+            })
+
+        }
     }
     
 }
