@@ -298,7 +298,7 @@ class ServerfunctionController {
             .where('user_id', reportjson.user_id)
             .fetch()
 
-            const expotoken = await receptor.toJSON()
+            const expotokens = await receptor.toJSON()
 
             if(expotokens !== null){
                 let expo = new Expo();
