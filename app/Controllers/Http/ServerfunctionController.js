@@ -221,7 +221,8 @@ class ServerfunctionController {
                 report.operador_name = autentication.name
                 report.image = image
                 await report.save()
-
+                const reportjson = await report.toJSON()
+                
                 const mytokens = await Expotoken.query()
                 .where('user_id', reportjson.user_id)
                 .fetch()
