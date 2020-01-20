@@ -219,8 +219,11 @@ class ServerfunctionController {
                 report.status = 'Finalizado'
                 report.supervisor_name = data.supervisor_name
                 report.operador_name = autentication.name
+                report.report = data.coments
                 report.image = image
+                report.is_readed = false
                 await report.save()
+
                 const reportjson = await report.toJSON()
                 
                 const mytokens = await Expotoken.query()
@@ -238,7 +241,7 @@ class ServerfunctionController {
                         messages.push({
                             to: expotoken.expo_token,
                             sound: 'default',
-                            title: 'Tu reporte ha sido contestadp',
+                            title: 'Tu reporte ha sido contestado',
                             body: 'Tu reporte con id '+reportjson.id+' finalizó',
                         })
                         
@@ -275,6 +278,71 @@ class ServerfunctionController {
                 message: 'No estás autorizado para ver esto'
             })
 
+        }
+    }
+    async notificar({auth, request, response}){
+        const data = request.only('reportid', 'notification' )
+        const user = await User.query()
+        .where('id', auth.current.user.id)
+        .with('rank')
+        .firstOrFail()
+
+        const op = await user.toJSON()
+
+        if(op.rank !== null && op.rank.rank_type == 'Operador'){
+            try{
+            const report = await Report.findBy('id', data.reportid)
+            const reportjson = await report.toJSON()
+
+            const receptor = await Expotoken.query()
+            .where('user_id', reportjson.user_id)
+            .fetch()
+
+            const expotoken = await receptor.toJSON()
+
+            if(expotokens !== null){
+                let expo = new Expo();
+                let messages = [];
+
+                for(let expotoken of expotokens){
+
+                    messages.push({
+                        to: expotoken.expo_token,
+                        sound: 'default',
+                        title: 'Te estamos notificando!',
+                        body: data.notification
+                    })
+                    
+                }
+
+                let chunks = expo.chunkPushNotifications(messages)
+
+                let tickets = []
+                for(let chunk of chunks ){
+                    try {
+                      let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+                      console.log(ticketChunk);
+                      tickets.push(...ticketChunk);
+                    } catch (error) {
+                        return response.status(400).json({
+                            status : 'wrong',
+                            message: 'No se pudo enviar el reporte'
+                        })
+                    }
+
+                }
+            } 
+            }catch(error){
+                return response.status(400).json({
+                    status:'wrong',
+                    message:'Tu solicitud no pudo ser procesada en este momento'
+                })
+            }
+        } else{
+            return response.status(401).json({
+                status:'wrong',
+                message: 'No estás autorizado para ver esto'
+            })
         }
     }
     
