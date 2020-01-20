@@ -55,7 +55,6 @@ class ServerfunctionController {
             .with('rank')
             .firstOrFail()
         const tokens = await Expotoken.all()
-        console.log(tokens)
         const operador = await user.toJSON()
         try{    
 
@@ -73,7 +72,6 @@ class ServerfunctionController {
                     data: reports
                 })
             } else{
-                console.log(operador)
                 return response.status(401).json({
                     status: 'wrong',
                     data: 'no estás autorizado para ver esto'
@@ -110,7 +108,6 @@ class ServerfunctionController {
                 .fetch()
                 
                 const expotokens = await mytokens.toJSON()
-                console.log(expotokens)
                 if(expotokens !== null){
                     let expo = new Expo();
                     let messages = [];
@@ -132,7 +129,6 @@ class ServerfunctionController {
                     for(let chunk of chunks ){
                         try {
                           let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-                          console.log(ticketChunk);
                           tickets.push(...ticketChunk);
                         } catch (error) {
                             return response.status(400).json({
@@ -253,7 +249,6 @@ class ServerfunctionController {
                     for(let chunk of chunks ){
                         try {
                           let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-                          console.log(ticketChunk);
                           tickets.push(...ticketChunk);
                         } catch (error) {
                             return response.status(400).json({
@@ -266,7 +261,6 @@ class ServerfunctionController {
                 }
 
             } catch(error){
-                console.log(error)
                 return response.status(400).json({
                     status:'wrong',
                     message: 'UN error interno, intentalo más tarde'
@@ -321,7 +315,6 @@ class ServerfunctionController {
                 for(let chunk of chunks ){
                     try {
                       let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-                      console.log(ticketChunk);
                       tickets.push(...ticketChunk);
                     } catch (error) {
                         return response.status(400).json({

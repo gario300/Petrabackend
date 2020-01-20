@@ -26,6 +26,7 @@ Route.group(() => {
     Route.get('/onproccess/:id', 'ServerfunctionController.onproccess')
     Route.get('/getone/:id', 'ServerfunctionController.getonereport')
     Route.put('/respond', 'ServerfunctionController.responder')
+    Route.post('/notificar','ServerfunctionController.notificar')
 }).prefix('superuser').middleware('auth:jwt')
 
 Route.group(() => {
