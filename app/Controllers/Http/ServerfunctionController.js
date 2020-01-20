@@ -275,7 +275,8 @@ class ServerfunctionController {
         }
     }
     async notificar({auth, request, response}){
-        const data = request.only('reportid', 'notification' )
+        const data = request.only(['reportid', 'notification'])
+
         const user = await User.query()
         .where('id', auth.current.user.id)
         .with('rank')
