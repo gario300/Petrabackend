@@ -5,7 +5,7 @@ class AppfunctionController {
         const versiondata = request.only(['appverion'])
         const currentversion = '1.0.0'
 
-        if(versiondata.appversion === currentversion) {
+        if(versiondata.appversion == currentversion) {
             return response.json({
                 status: 'sure',
                 data: 'sure'
