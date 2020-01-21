@@ -175,7 +175,7 @@ class UserController {
 
             const pay = await stripe.subscriptions.create({
                 customer: customer.id,
-                items: [{plan: 'plan_GUIbgZj5pUlULh'}],
+                items: [{plan: 'plan_GT9nmMFhVtieYt'}],
             })
 
             if(pay.status == 'active' ){

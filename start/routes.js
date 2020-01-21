@@ -35,6 +35,7 @@ Route.group(() => {
     Route.post('/cancelsubscription', 'UserController.cancelsubscription')
     Route.post('/notifications', 'ExpotokenController.postoken')
     Route.post('/logout', 'UserController.logout')
+    Route.post('/version', 'AppfunctionController.version')
     
 })
     .prefix('account')
