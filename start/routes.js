@@ -20,6 +20,7 @@ const Route = use('Route')
 Route.post('/signup', 'UserController.signup');
 Route.post('/login', 'UserController.login');
 Route.post('/makeop', 'ServerfunctionController.makeop')
+Route.post('/version', 'AppfunctionController.version')
 
 Route.group(() => {
     Route.post('/getallalerts', 'ServerfunctionController.getalertssend')
@@ -35,7 +36,6 @@ Route.group(() => {
     Route.post('/cancelsubscription', 'UserController.cancelsubscription')
     Route.post('/notifications', 'ExpotokenController.postoken')
     Route.post('/logout', 'UserController.logout')
-    Route.post('/version', 'AppfunctionController.version')
     
 })
     .prefix('account')
