@@ -2,10 +2,10 @@
 
 class AppfunctionController {
     async versions({request, response}){
-        const versiondata = request.only(['appverion'])
+        const versiondata = request.only(['appversion'])
         const currentversion = '1.0.0'
 
-        if(versiondata.appversion == currentversion) {
+        if(versiondata.appversion === currentversion) {
             return response.json({
                 status: 'sure',
                 data: 'sure'
