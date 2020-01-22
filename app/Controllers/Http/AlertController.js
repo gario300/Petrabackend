@@ -13,7 +13,6 @@ class AlertController {
         const userData = request.only(['type','latitude','longitude']);
         try{
             let supervition = false 
-            console.log(userData.latitude)
             const user = auth.current.user
 
             let latitude = userData.latitude.toString()
@@ -29,6 +28,7 @@ class AlertController {
             
             if(alertanteobjeto.customer !== null){
                const custominfo = await stripe.subscriptions.retrieve(alertanteobjeto.customer.customer_id)
+            	console.log(userData.custominfo)
                     if(custominfo.status == 'active'){
                         supervition = true
                     } 
