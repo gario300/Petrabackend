@@ -28,10 +28,12 @@ class AlertController {
             
             if(alertanteobjeto.customer !== null){
                const custominfo = await stripe.subscriptions.retrieve(alertanteobjeto.customer.customer_id)
-            	console.log(custominfo)
+            	console.log(custominfo.status)
                     if(custominfo.status == 'active'){
                         supervition = true
-                    } 
+                    } else {
+		    	supervition = false
+		    }
             }
 
             const alert = await new Alert()
