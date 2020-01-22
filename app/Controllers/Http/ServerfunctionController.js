@@ -65,7 +65,7 @@ class ServerfunctionController {
                 .with('alert')
                 .with('user')
                 .orderBy('created_at', 'DESC')
-                .paginate(data.page, 6)
+                .paginate(data.page, 4)
                 
                 return response.json({
                     status: 'sure',
